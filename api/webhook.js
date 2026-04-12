@@ -8,7 +8,6 @@ const supabase = createClient(
 
 export default async function handler(req, res) {
 
-  // 🔐 VERIFICAÇÃO META
   if (req.method === "GET") {
     const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
