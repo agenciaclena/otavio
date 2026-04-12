@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Clientes e Fornecedores</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+body{margin:0;font-family:Inter;background:#f1f5f9}
+
+/* HEADER */
+.header{
+  background:#fff;
+  padding:14px 20px;
+  font-weight:800;
+  border-bottom:1px solid #e5e7eb;
+}
+
+/* FILTRO */
+.filters{
+  background:#fff;
+  padding:14px;
+  display:flex;
+  gap:10px;
+}
+
+input{
+  height:36px;
+  border:1px solid #ddd;
+  border-radius:6px;
+  padding:0 10px;
+}
+
+/* BOTÃO */
+.btn{
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  padding:8px 12px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+/* TABELA */
+.table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.table th,.table td{
+  padding:8px;
+  border-bottom:1px solid #ddd;
+  font-size:13px;
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal-box{
+  width:1000px;
+  background:#fff;
+  border-radius:10px;
+}
+
+.tabs{
+  display:flex;
+  border-bottom:1px solid #ddd;
+}
+
+.tab{
+  padding:10px;
+  cursor:pointer;
+}
+
+.tab.active{
+  border-bottom:3px solid blue;
+}
+
+.form{
+  padding:12px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+}
+
+.hidden{display:none}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">Clientes e Fornecedores</div>
+
+<div class="filters">
+<input id="busca" placeholder="Buscar...">
+<button class="btn" onclick="abrir()">+ Cadastrar</button>
+</div>
+
+<table class="table">
+<thead>
+<tr>
+<th>Nome</th>
+<th>Documento</th>
+<th>Telefone</th>
+<th>Ações</th>
+</tr>
+</thead>
+<tbody id="lista"></tbody>
+</table>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+<div class="modal-box">
+
+<div class="tabs">
+<div class="tab active" onclick="tab(0)">Dados</div>
+<div class="tab" onclick="tab(1)">Endereço</div>
+<div class="tab" onclick="tab(2)">Financeiro</div>
+<div class="tab" onclick="tab(3)">Obs</div>
+</div>
+
+<!-- DADOS -->
+<div class="form tab-content">
+<div class="grid">
+<input id="nome" placeholder="Nome">
+<input id="doc" placeholder="CPF/CNPJ">
+<input id="tel" placeholder="Telefone">
+<input id="email" placeholder="Email">
+<input id="codigo" placeholder="Código externo">
+</div>
+</div>
+
+<!-- ENDEREÇO -->
+<div class="form tab-content hidden">
+<div class="grid">
+<input id="cep" placeholder="CEP">
+<input id="log" placeholder="Logradouro">
+<input id="num" placeholder="Número">
+<input id="bairro" placeholder="Bairro">
+<input id="cidade" placeholder="Cidade">
+</div>
+</div>
+
+<!-- FINANCEIRO -->
+<div class="form tab-content hidden">
+<div class="grid">
+<input id="banco" placeholder="Banco">
+<input id="agencia" placeholder="Agência">
+<input id="conta" placeholder="Conta">
+<input id="pix" placeholder="PIX">
+</div>
+</div>
+
+<!-- OBS -->
+<div class="form tab-content hidden">
+<textarea id="obs" style="width:100%;height:100px"></textarea>
+</div>
+
+<button class="btn" onclick="salvar()" style="margin:10px">Salvar</button>
+
+</div>
+</div>
+
+<script>
+
+const sb = supabase.createClient(
+  "https://ehxrrpsiksceljmhsfxk.supabase.co",
+  "sb_publishable_Jm2ZQKzPS3gNPCKSjFAmYQ_WNMYwF1j"
+);
+
+let editId=null;
+
+/* LOAD */
+async function load(){
+  const {data} = await sb.from("pessoas_financeiro").select("*")
+
+  const lista = document.getElementById("lista")
+  lista.innerHTML=""
+
+  data.forEach(p=>{
+    lista.innerHTML+=`
+      <tr>
+        <td>${p.nome}</td>
+        <td>${p.documento||''}</td>
+        <td>${p.telefone||''}</td>
+        <td>
+          <button onclick="editar('${p.id}')">✏️</button>
+          <button onclick="del('${p.id}')">🗑️</button>
+        </td>
+      </tr>
+    `
+  })
+}
+
+/* SALVAR */
+async function salvar(){
+
+const obj = {
+  nome:nome.value,
+  documento:doc.value,
+  telefone:tel.value,
+  email:email.value,
+  codigo_externo:codigo.value,
+
+  cep:cep.value,
+  logradouro:log.value,
+  numero:num.value,
+  bairro:bairro.value,
+  cidade:cidade.value,
+
+  banco:banco.value,
+  agencia:agencia.value,
+  conta:conta.value,
+
+  pix_chave:pix.value,   // 👈 CORRIGIDO
+
+  observacoes:obs.value
+}
+  if(editId){
+    await sb.from("pessoas_financeiro").update(obj).eq("id",editId)
+  }else{
+    await sb.from("pessoas_financeiro").insert([obj])
+  }
+
+  fechar()
+  load()
+}
+
+/* EDITAR */
+async function editar(id){
+  const {data} = await sb.from("pessoas_financeiro").select("*").eq("id",id).single()
+
+  editId=id
+
+  nome.value=data.nome
+  doc.value=data.documento
+  tel.value=data.telefone
+  email.value=data.email
+
+  abrir()
+}
+
+/* DELETE */
+async function del(id){
+  if(confirm("Excluir?")){
+    await sb.from("pessoas_financeiro").delete().eq("id",id)
+    load()
+  }
+}
+
+/* MODAL */
+function abrir(){modal.style.display="flex"}
+function fechar(){modal.style.display="none";editId=null}
+
+/* TABS */
+function tab(i){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
+  document.querySelectorAll(".tab")[i].classList.add("active")
+
+  document.querySelectorAll(".tab-content").forEach(c=>c.classList.add("hidden"))
+  document.querySelectorAll(".tab-content")[i].classList.remove("hidden")
+}
+
+load()
+
+</script>
+
+</body>
+</html>

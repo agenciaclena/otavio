@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Configurações</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+/* ================= BASE ================= */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Inter;
+}
+
+body{
+  background:#f1f5f9;
+}
+
+/* ================= HEADER ================= */
+.header{
+  height:60px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  font-weight:800;
+  border-bottom:1px solid #e5e7eb;
+}
+
+/* ================= GRID ================= */
+.container{
+  padding:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:20px;
+}
+
+/* ================= CARD ================= */
+.card{
+  background:#fff;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,.08);
+  cursor:pointer;
+  transition:.2s;
+  position:relative;
+  overflow:hidden;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+}
+
+.card h3{
+  font-size:16px;
+  margin-bottom:6px;
+}
+
+.card p{
+  font-size:13px;
+  color:#64748b;
+}
+
+/* ICON */
+.icon{
+  width:46px;
+  height:46px;
+  border-radius:12px;
+  background:#2563eb;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+/* ================= MODAL ================= */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(6px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+}
+
+.modal-box{
+  width:95vw;
+  max-width:1200px;
+  height:90vh;
+  background:#fff;
+  border-radius:20px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  animation:fade .2s ease;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:scale(.95)}
+  to{opacity:1;transform:scale(1)}
+}
+
+.modal-header{
+  height:60px;
+  background:#f8fafc;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  font-weight:800;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.close{
+  cursor:pointer;
+  font-size:20px;
+}
+
+.modal iframe{
+  flex:1;
+  border:none;
+}
+
+/* RESPONSIVO */
+@media(max-width:600px){
+  .card{padding:16px}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  Configurações do Sistema
+</div>
+
+<div class="container">
+
+<div class="grid">
+
+  <!-- CLIENTES -->
+  <div class="card" onclick="abrir('restaurante/financeiro/cadastros.html')">
+    <div class="icon">👤</div>
+    <h3>Clientes / Fornecedores</h3>
+    <p>Cadastro</p>
+  </div>
+
+  <!-- CONTAS -->
+  <div class="card" onclick="abrir('contas_bancarias.html')">
+    <div class="icon">🏦</div>
+    <h3>Contas Bancárias</h3>
+    <p>Gerencie suas contas</p>
+  </div>
+
+  <!-- PLANO -->
+  <div class="card" onclick="abrir('plano_contas.html')">
+    <div class="icon">📊</div>
+    <h3>Plano de Contas</h3>
+    <p>Estrutura financeira</p>
+  </div>
+
+  <!-- FINANCEIRO -->
+  <div class="card" onclick="abrir('financeiro.html')">
+    <div class="icon">💰</div>
+    <h3>Financeiro</h3>
+    <p>Configurações gerais</p>
+  </div>
+
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+<div class="modal-box">
+
+<div class="modal-header">
+<span id="tituloModal">Configuração</span>
+<span class="close" onclick="fechar()">✕</span>
+</div>
+
+<iframe id="frame"></iframe>
+
+</div>
+</div>
+
+<script>
+
+/* ABRIR */
+function abrir(pagina){
+  document.getElementById("modal").style.display="flex"
+  document.getElementById("frame").src = pagina
+}
+
+/* FECHAR */
+function fechar(){
+  document.getElementById("modal").style.display="none"
+  document.getElementById("frame").src=""
+}
+
+</script>
+
+</body>
+</html>

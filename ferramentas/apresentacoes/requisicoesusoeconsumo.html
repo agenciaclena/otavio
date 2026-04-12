@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Sistema de Requisições • Demo</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--azul:#2b6fe8;
+--verde:#22c55e;
+--bg:#eef2f7;
+--card:#ffffff;
+--border:#e2e8f0;
+--text:#0f172a;
+}
+
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Inter;
+background:var(--bg);
+}
+
+/* HERO */
+.hero{
+padding:40px 20px;
+text-align:center;
+background:#fff;
+border-bottom:1px solid var(--border);
+}
+
+.hero h1{margin:0;font-size:28px;}
+.hero p{color:#64748b;margin-top:10px;}
+
+.btn{
+background:var(--verde);
+color:#fff;
+border:none;
+padding:10px 14px;
+border-radius:8px;
+font-weight:700;
+cursor:pointer;
+}
+
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:380px 1fr;
+gap:20px;
+padding:20px;
+}
+
+/* CARD */
+.card{
+background:#fff;
+border-radius:14px;
+box-shadow:0 6px 18px rgba(0,0,0,.06);
+}
+
+/* FORM */
+.form{padding:20px;}
+
+.box-title{
+font-weight:800;
+font-size:18px;
+margin-bottom:15px;
+}
+
+input,select,textarea{
+width:100%;
+padding:10px;
+margin-top:8px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+/* UNIDADES */
+.unidades{
+display:flex;
+gap:8px;
+margin-top:10px;
+}
+
+.unidades button{
+flex:1;
+padding:8px;
+border-radius:20px;
+border:2px solid var(--azul);
+background:#fff;
+cursor:pointer;
+}
+
+.unidades button.active{
+background:var(--azul);
+color:#fff;
+}
+
+/* PAINEL */
+.panel-header{
+padding:15px 20px;
+font-weight:800;
+border-bottom:1px solid var(--border);
+}
+
+/* STATUS CARDS */
+.status{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+padding:12px 20px;
+background:#f8fafc;
+border-bottom:1px solid var(--border);
+}
+
+.card-status{
+background:#fff;
+padding:8px 12px;
+border-radius:10px;
+font-weight:700;
+border:1px solid var(--border);
+}
+
+.badge{
+background:#000;
+color:#fff;
+padding:2px 7px;
+border-radius:6px;
+margin-left:5px;
+}
+
+/* TABELA */
+thead{
+background:var(--azul);
+color:#fff;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+font-size:13px;
+}
+
+td,th{
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+/* STATUS BOTÃO */
+.status-btn{
+padding:6px 10px;
+border-radius:8px;
+font-weight:700;
+cursor:pointer;
+border:none;
+}
+
+.PENDENTE{background:#facc15;}
+.CARRINHO{background:#60a5fa;}
+.COMPRADO{background:#34d399;}
+.NEGADO{background:#f87171;}
+.ENTREGUE{background:#4ade80;}
+.SEM\ ESTOQUE{background:#9ca3af;}
+
+/* DROPDOWN */
+.dropdown{
+position:relative;
+}
+
+.dropdown-menu{
+display:none;
+position:absolute;
+background:#fff;
+border:1px solid #ddd;
+border-radius:8px;
+top:30px;
+left:0;
+z-index:10;
+min-width:120px;
+}
+
+.dropdown-menu div{
+padding:8px;
+cursor:pointer;
+}
+
+.dropdown-menu div:hover{
+background:#f1f5f9;
+}
+
+/* DESCRIÇÃO */
+.descricao{
+background:#fff;
+padding:40px 20px;
+margin-top:30px;
+text-align:center;
+}
+
+.descricao h2{font-size:26px;}
+
+.descricao p{
+max-width:700px;
+margin:auto;
+color:#64748b;
+}
+
+/* RESPONSIVO */
+@media(max-width:900px){
+.grid{grid-template-columns:1fr}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+<h1>Sistema de Requisições Inteligente</h1>
+<p>Controle completo de pedidos e setores</p>
+<button class="btn" onclick="ativar()">Ativar por R$ 49,90</button>
+</div>
+
+<div class="grid">
+
+<!-- FORM -->
+<div class="card form">
+
+<div class="box-title">DEMONSTRAÇÃO DO PAINEL DO SOLICITANTE</div>
+
+<label>Solicitante</label>
+<input value="ANDRÉ" readonly>
+
+<label>Setor</label>
+<select id="setor">
+<option>BAR</option>
+<option>COZINHA</option>
+</select>
+
+<label>Produto</label>
+<input id="produto">
+
+<label>Quantidade</label>
+<input id="qtd" type="number">
+
+<label>Unidade</label>
+<div class="unidades">
+<button onclick="setU(this,'UN')">UN</button>
+<button onclick="setU(this,'KG')">KG</button>
+<button onclick="setU(this,'CX')" class="active">CX</button>
+</div>
+
+<button class="btn" style="width:100%;margin-top:12px" onclick="enviar()">
+ENVIAR ITEM
+</button>
+
+</div>
+
+<!-- PAINEL -->
+<div class="card">
+
+<div class="panel-header">DEMONSTRAÇÃO DO PAINEL ADMINISTRATIVO</div>
+
+<div class="status">
+<div class="card-status">PENDENTE <span id="cP" class="badge">0</span></div>
+<div class="card-status">CARRINHO <span id="cC" class="badge">0</span></div>
+<div class="card-status">COMPRADO <span id="cCO" class="badge">0</span></div>
+<div class="card-status">NEGADO <span id="cN" class="badge">0</span></div>
+<div class="card-status">ENTREGUE <span id="cE" class="badge">0</span></div>
+<div class="card-status">SEM ESTOQUE <span id="cS" class="badge">0</span></div>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Item</th>
+<th>Qtd</th>
+<th>Unid</th>
+<th>Setor</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="tabela"></tbody>
+</table>
+
+</div>
+
+</div>
+
+<!-- DESCRIÇÃO -->
+<div class="descricao">
+<h2>🚀 Transforme sua operação</h2>
+<p>
+Controle tudo em tempo real, reduza erros e aumente a eficiência da sua equipe com um sistema simples e poderoso.
+</p>
+
+<button class="btn" onclick="ativar()">
+Ativar agora por R$ 49,90
+</button>
+</div>
+
+<script>
+
+let unidade="CX"
+
+function salvar(lista){
+localStorage.setItem("demo_req",JSON.stringify({time:Date.now(),dados:lista}))
+}
+
+function carregar(){
+const data=JSON.parse(localStorage.getItem("demo_req"))
+if(!data)return []
+if(Date.now()-data.time>72000000){
+localStorage.removeItem("demo_req")
+return []
+}
+return data.dados
+}
+
+function setU(btn,u){
+unidade=u
+document.querySelectorAll(".unidades button").forEach(b=>b.classList.remove("active"))
+btn.classList.add("active")
+}
+
+function enviar(){
+if(!produto.value || !qtd.value)return alert("Preencha os campos")
+
+let lista=carregar()
+
+lista.unshift({
+data:new Date().toLocaleString(),
+produto:produto.value,
+qtd:qtd.value,
+unidade,
+setor:setor.value,
+status:"PENDENTE"
+})
+
+salvar(lista)
+render()
+
+produto.value=""
+qtd.value=""
+}
+
+function mudarStatus(i,status){
+let lista=carregar()
+lista[i].status=status
+salvar(lista)
+render()
+}
+
+function render(){
+let lista=carregar()
+
+let count={PENDENTE:0,CARRINHO:0,COMPRADO:0,NEGADO:0,ENTREGUE:0,"SEM ESTOQUE":0}
+
+tabela.innerHTML=""
+
+lista.forEach((item,i)=>{
+count[item.status]++
+
+tabela.innerHTML+=`
+<tr>
+<td>${item.data}</td>
+<td>${item.produto}</td>
+<td>${item.qtd}</td>
+<td>${item.unidade}</td>
+<td>${item.setor}</td>
+<td>
+<div class="dropdown">
+<button class="status-btn ${item.status}" onclick="toggleMenu(${i})">
+${item.status}
+</button>
+<div class="dropdown-menu" id="menu-${i}">
+<div onclick="mudarStatus(${i},'PENDENTE')">PENDENTE</div>
+<div onclick="mudarStatus(${i},'CARRINHO')">CARRINHO</div>
+<div onclick="mudarStatus(${i},'COMPRADO')">COMPRADO</div>
+<div onclick="mudarStatus(${i},'NEGADO')">NEGADO</div>
+<div onclick="mudarStatus(${i},'ENTREGUE')">ENTREGUE</div>
+<div onclick="mudarStatus(${i},'SEM ESTOQUE')">SEM ESTOQUE</div>
+</div>
+</div>
+</td>
+</tr>`
+})
+
+cP.innerText=count.PENDENTE
+cC.innerText=count.CARRINHO
+cCO.innerText=count.COMPRADO
+cN.innerText=count.NEGADO
+cE.innerText=count.ENTREGUE
+cS.innerText=count["SEM ESTOQUE"]
+}
+
+function toggleMenu(i){
+let m=document.getElementById("menu-"+i)
+m.style.display = m.style.display==="block"?"none":"block"
+}
+
+function ativar(){
+window.open("https://wa.me/5577998253249?text="+encodeURIComponent("Quero ativar o módulo  *REQUISIÇÕES DE USO E CONSUMO*"))
+}
+
+render()
+
+</script>
+
+</body>
+</html>

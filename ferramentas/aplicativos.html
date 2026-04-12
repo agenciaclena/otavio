@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>App Store • Mercatto</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+
+:root{
+--primary:#2563eb;
+--bg:#f8fafc;
+--card:#ffffff;
+--text:#0f172a;
+--muted:#64748b;
+--border:#e2e8f0;
+--radius:18px;
+--shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter;}
+
+body{
+background:linear-gradient(180deg,#ffffff,#f1f5f9);
+}
+
+/* HERO */
+
+.hero{
+padding:28px;
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+color:#fff;
+border-radius:0 0 30px 30px;
+}
+
+.hero h1{
+font-size:24px;
+font-weight:900;
+}
+
+.hero p{
+font-size:13px;
+opacity:.9;
+margin-top:6px;
+}
+
+/* SEARCH */
+
+.header{
+padding:16px;
+}
+
+.search{
+width:100%;
+height:44px;
+border-radius:12px;
+border:1px solid var(--border);
+padding:0 14px;
+}
+
+/* SECTION */
+
+.section{
+padding:16px;
+}
+
+.section-title{
+font-size:16px;
+font-weight:900;
+margin-bottom:12px;
+}
+
+/* HIGHLIGHT */
+
+.highlight{
+display:flex;
+gap:14px;
+overflow:auto;
+}
+
+.highlight-card{
+min-width:260px;
+background:#fff;
+border-radius:18px;
+padding:16px;
+box-shadow:var(--shadow);
+}
+
+.highlight-card h3{
+font-size:14px;
+font-weight:800;
+}
+
+.highlight-card p{
+font-size:12px;
+color:var(--muted);
+margin:6px 0;
+}
+
+.btn{
+background:var(--primary);
+color:#fff;
+border:none;
+padding:6px 14px;
+border-radius:999px;
+cursor:pointer;
+font-size:12px;
+}
+
+/* GRID */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+gap:16px;
+}
+
+/* CARD */
+
+.card{
+background:#fff;
+border-radius:18px;
+padding:16px;
+box-shadow:var(--shadow);
+display:flex;
+flex-direction:column;
+gap:10px;
+transition:.2s;
+text-decoration:none;
+color:inherit;
+}
+
+.card:hover{
+transform:translateY(-6px);
+}
+
+.icon{
+width:50px;
+height:50px;
+border-radius:14px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+color:#fff;
+}
+
+/* RATING */
+
+.rating{
+font-size:11px;
+color:#f59e0b;
+}
+
+/* TAG */
+
+.tag{
+font-size:10px;
+font-weight:800;
+background:#eef2ff;
+color:#3730a3;
+padding:4px 8px;
+border-radius:999px;
+width:max-content;
+}
+
+/* MOST USED */
+
+.top{
+display:flex;
+gap:10px;
+overflow:auto;
+}
+
+.top-item{
+background:#fff;
+padding:10px 14px;
+border-radius:999px;
+font-size:12px;
+font-weight:700;
+box-shadow:var(--shadow);
+cursor:pointer;
+white-space:nowrap;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+<h1>Central de Aplicativos</h1>
+<p>Gerencie todo o seu sistema em um só lugar</p>
+</div>
+
+<div class="header">
+<input id="search" class="search" placeholder="Buscar aplicativo...">
+</div>
+
+<!-- MAIS USADOS -->
+<div class="section">
+<div class="section-title">🔥 Mais usados</div>
+<div class="top" id="top"></div>
+</div>
+
+<!-- DESTAQUES -->
+<div class="section">
+<div class="section-title">⭐ Destaques</div>
+<div class="highlight">
+
+<div class="highlight-card">
+<h3>Requisições</h3>
+<p>Controle total do estoque interno</p>
+<button class="btn" onclick="go('apresentacoes/requisicoesusoeconsumo.html')">Abrir</button>
+</div>
+
+<div class="highlight-card">
+<h3>CMV</h3>
+<p>Análise de lucro em tempo real</p>
+<button class="btn" onclick="go('cmv.html')">Abrir</button>
+</div>
+
+</div>
+</div>
+
+<!-- GRID -->
+<div class="section">
+<div class="section-title">📦 Todos os aplicativos</div>
+<div id="grid" class="grid"></div>
+</div>
+
+<script>
+
+const apps=[
+{nome:"Requisições",tipo:"Operacional",icon:"ri-restaurant-line",link:"apresentacoes/requisicoesusoeconsumo.html",uso:95},
+{nome:"PDV",tipo:"Operacional",icon:"ri-goblet-line",link:"pdv-bebidas.html",uso:80},
+{nome:"CMV",tipo:"Financeiro",icon:"ri-bar-chart-line",link:"cmv.html",uso:99},
+{nome:"Buffet",tipo:"Operacional",icon:"ri-cake-3-line",link:"buffet.html",uso:70},
+{nome:"Financeiro",tipo:"Financeiro",icon:"ri-money-dollar-circle-line",link:"financeiro.html",uso:60},
+{nome:"Auditoria",tipo:"Sistema",icon:"ri-shield-check-line",link:"auditoria.html",uso:40}
+];
+
+function go(l){window.location.href=l}
+
+/* MAIS USADOS */
+top.innerHTML=apps
+.sort((a,b)=>b.uso-a.uso)
+.slice(0,4)
+.map(a=>`<div class="top-item" onclick="go('${a.link}')">${a.nome}</div>`)
+.join("");
+
+/* GRID */
+
+function render(){
+
+const busca=search.value.toLowerCase();
+
+const filtrados=apps.filter(a=>
+a.nome.toLowerCase().includes(busca)
+);
+
+grid.innerHTML=filtrados.map(a=>`
+<a href="${a.link}" class="card">
+
+<div class="icon"><i class="${a.icon}"></i></div>
+
+<div><strong>${a.nome}</strong></div>
+
+<div class="rating">★★★★★</div>
+
+<div class="tag">${a.tipo}</div>
+
+</a>
+`).join("");
+
+}
+
+search.addEventListener("input",render);
+
+render();
+
+</script>
+
+</body>
+</html>

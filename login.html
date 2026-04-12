@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+<title>Mercatto Systems • Plataforma Inteligente</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+/* ===== BASE ===== */
+:root{
+--bg:#f8fafc;
+--card:#ffffff;
+--border:#e2e8f0;
+
+--text:#0f172a;
+--muted:#64748b;
+
+--primary:#14c8a8;
+--primary-dark:#0ea58b;
+}
+
+*{box-sizing:border-box;margin:0}
+
+body{
+font-family:Inter;
+background:var(--bg);
+color:var(--text);
+}
+
+/* ===== HEADER ===== */
+.header{
+position:sticky;
+top:0;
+background:#fff;
+border-bottom:1px solid var(--border);
+padding:16px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+z-index:10;
+}
+
+.logo{
+font-weight:900;
+font-size:22px;
+}
+
+.cta-top{
+background:var(--primary);
+color:#fff;
+padding:10px 16px;
+border-radius:10px;
+font-weight:700;
+cursor:pointer;
+}
+
+/* ===== HERO ===== */
+.hero{
+display:flex;
+gap:50px;
+padding:70px 30px;
+align-items:center;
+}
+
+.hero-left{
+flex:1;
+}
+
+.hero-title{
+font-size:48px;
+font-weight:900;
+line-height:1.1;
+}
+
+.hero-title span{
+color:var(--primary);
+}
+
+.hero-desc{
+margin-top:20px;
+color:var(--muted);
+max-width:520px;
+font-size:16px;
+}
+
+.hero-cta{
+margin-top:30px;
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+}
+
+.btn{
+padding:14px 20px;
+border-radius:12px;
+border:none;
+cursor:pointer;
+font-weight:700;
+transition:.2s;
+}
+
+.btn-primary{
+background:linear-gradient(135deg,#14c8a8,#0ea58b);
+color:#fff;
+}
+
+.btn-secondary{
+background:#fff;
+border:1px solid var(--border);
+}
+
+.btn:hover{
+transform:translateY(-2px);
+}
+
+/* ===== LOGIN ===== */
+.login{
+width:400px;
+background:#fff;
+border:1px solid var(--border);
+border-radius:18px;
+padding:28px;
+box-shadow:0 30px 80px rgba(0,0,0,.08);
+}
+
+.login h2{
+margin-bottom:15px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:10px;
+border:1px solid var(--border);
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:var(--primary);
+color:#fff;
+font-weight:800;
+cursor:pointer;
+}
+
+.error{
+color:#dc2626;
+font-size:13px;
+margin-top:10px;
+}
+
+/* ===== PRODUTOS ===== */
+.section{
+padding:70px 30px;
+}
+
+.section h3{
+font-size:30px;
+margin-bottom:30px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;
+}
+
+.card{
+background:#fff;
+border:1px solid var(--border);
+border-radius:16px;
+padding:24px;
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+box-shadow:0 20px 60px rgba(0,0,0,.08);
+}
+
+.card b{
+display:block;
+font-size:18px;
+margin-bottom:10px;
+}
+
+.card span{
+font-size:14px;
+color:var(--muted);
+line-height:1.5;
+}
+
+/* ===== CTA FINAL ===== */
+.cta{
+background:linear-gradient(135deg,#14c8a8,#0ea58b);
+color:#fff;
+padding:60px;
+border-radius:20px;
+text-align:center;
+}
+
+.cta h3{
+font-size:32px;
+margin-bottom:15px;
+}
+
+/* ===== FOOTER ===== */
+.footer{
+padding:40px;
+text-align:center;
+font-size:13px;
+color:var(--muted);
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:900px){
+.hero{
+flex-direction:column;
+}
+.login{
+width:100%;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+<div class="logo">MERCATTO SYSTEM</div>
+<div class="cta-top" onclick="irWhats()">Falar no WhatsApp</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+
+<div class="hero-left">
+
+<div class="hero-title">
+Pare de perder dinheiro na sua operação.<br>
+<span>Tenha controle total.</span>
+</div>
+
+<div class="hero-desc">
+Sistema completo para restaurantes com controle de CMV, fichas técnicas, pedidos e automação WhatsApp.
+Você vende mais, erra menos e aumenta seu lucro.
+</div>
+
+<div class="hero-cta">
+
+<button class="btn btn-primary" onclick="irWhats()">
+Quero esse sistema
+</button>
+
+<button class="btn btn-secondary">
+Ver funcionalidades
+</button>
+
+<button class="btn btn-secondary" onclick="scrollLogin()">
+Fazer login
+</button>
+
+</div>
+
+</div>
+
+<!-- LOGIN -->
+<div class="login">
+
+<h2>Acessar sistema</h2>
+
+<input id="email" placeholder="Email">
+<input id="senha" type="password" placeholder="Senha">
+
+<button onclick="login()">Entrar</button>
+
+<div onclick="recuperar()" style="margin-top:10px;font-size:13px;color:#64748b;cursor:pointer">
+Esqueci minha senha
+</div>
+
+<div id="erro" class="error"></div>
+
+</div>
+
+</div>
+
+<!-- PRODUTOS -->
+<div class="section">
+
+<h3>Tudo que você precisa em um único sistema</h3>
+
+<div class="grid">
+
+<div class="card">
+<b>📊 Ficha Técnica & CMV</b>
+<span>Controle total de custos, margem e lucro de cada prato em tempo real.</span>
+</div>
+
+<div class="card">
+<b>📲 WhatsApp Automatizado</b>
+<span>Responda clientes automaticamente e aumente suas vendas.</span>
+</div>
+
+<div class="card">
+<b>📦 Gestão de Estoque</b>
+<span>Controle entrada, saída e desperdício com precisão.</span>
+</div>
+
+<div class="card">
+<b>📈 Dashboard Inteligente</b>
+<span>Visualize vendas, lucro e desempenho em tempo real.</span>
+</div>
+
+<div class="card">
+<b>🛵 Delivery Integrado</b>
+<span>Organize pedidos e entregas sem erro.</span>
+</div>
+
+<div class="card">
+<b>⚙️ Automação Total</b>
+<span>Elimine tarefas manuais e aumente sua eficiência.</span>
+</div>
+
+</div>
+
+</div>
+
+<!-- CTA FINAL -->
+<div class="section">
+<div class="cta">
+
+<h3>Pronto para transformar sua empresa?</h3>
+
+<p>Comece agora e tenha controle total do seu negócio.</p>
+
+<button class="btn btn-primary" onclick="irWhats()">Começar agora</button>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+© Mercatto Systems • Plataforma Inteligente
+</div>
+
+<script>
+
+/* CONFIG */
+const SUPABASE = supabase.createClient(
+  "https://SEU_URL",
+  "SUA_KEY"
+);
+
+/* LOGIN */
+async function login(){
+
+const email = document.getElementById('email').value.trim();
+const senha = document.getElementById('senha').value.trim();
+const erro = document.getElementById('erro');
+
+erro.innerText = "";
+
+if(!email || !senha){
+erro.innerText = "Preencha email e senha";
+return;
+}
+
+const { data, error } = await SUPABASE.auth.signInWithPassword({
+email,
+password: senha
+});
+
+if(error){
+erro.innerText = "Email ou senha inválidos";
+return;
+}
+
+window.location.href = "home.html";
+}
+
+/* WHATSAPP */
+function irWhats(){
+window.open("https://wa.me/5577999999999?text=Tenho interesse no sistema Mercatto");
+}
+
+/* SCROLL LOGIN */
+function scrollLogin(){
+document.querySelector('.login').scrollIntoView({
+behavior:'smooth'
+});
+}
+
+/* RECUPERAR */
+function recuperar(){
+alert("Configurar reset de senha");
+}
+
+</script>
+
+</body>
+</html>
